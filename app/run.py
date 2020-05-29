@@ -4,6 +4,7 @@ import pandas as pd
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
 from flask import Flask
 from flask import render_template, request, jsonify
@@ -21,16 +22,17 @@ def tokenize(text):
     clean_tokens = []
     for tok in tokens:
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
+        if clean_tok not in stopwords.words("english"):
+            clean_tokens.append(clean_tok)
 
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('messages_cleaned', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model

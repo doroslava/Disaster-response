@@ -90,13 +90,14 @@ def build_model():
     '''
     # Text processing and model pipeline.
     pipeline = Pipeline([
-    ('vect', CountVectorizer(tokenizer=tokenize, max_df=0.4)), 
+    ('vect', CountVectorizer(tokenizer=tokenize)), 
     ('tfidf', TfidfTransformer()),
     ('cmo', MultiOutputClassifier(LinearSVC(random_state=1, class_weight='balanced')))
      ])
     
     # Define parameters for GridSearchCV.
     parameters = {
+        'vect__max_df' : (0.2, 0.4, 0.8),
         'cmo__estimator__C': (0.1, 1, 10)
     }
     # Create gridsearch object and return as final model pipeline.
@@ -108,7 +109,7 @@ def build_model():
 def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred = model.predict(X_test)
     for i, category in enumerate (category_names):
-        print(classification_report(Y_test[category], y_pred.T[i], labels = [0, 1]))
+        print(classification_report(Y_test[category], Y_pred.T[i], labels = [0, 1]))
 
 
 def save_model(model, model_filepath):
