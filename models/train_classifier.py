@@ -38,11 +38,10 @@ def load_data(database_filepath):
     
     # Assign predictor and response variables
     X = df.iloc[:,1]
-    Y = df.iloc[:,4:]
+    Y = df.iloc[:,4:]    
     
-    # Drop child alone column since it does not have values for the 1 category
+    #Drop "child alone" column which has only one class
     Y.drop("child_alone", inplace=True, axis = 1)
-    
     # Assign category names
     category_names = Y.columns
     
@@ -97,8 +96,7 @@ def build_model():
     
     # Define parameters for GridSearchCV.
     parameters = {
-        'vect__max_df' : (0.2, 0.4, 0.8),
-        'cmo__estimator__C': (0.1, 1, 10)
+        'vect__max_df' : (0.1, 0.4, 0.7, 1.0)
     }
     # Create gridsearch object and return as final model pipeline.
    
@@ -107,6 +105,17 @@ def build_model():
     return model
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+    Evaluates model in therms of precision, recall and F1 statistics.
+        Parameters: 
+            model : machine learning model to be evaluated
+            X_test (data frame): Predictor variables for test set
+            Y_test (data frame): Response variables for test set
+            category_name (list): List of names for response variables
+        
+        Returns: 
+            None
+    '''
     Y_pred = model.predict(X_test)
     for i, category in enumerate (category_names):
         print(classification_report(Y_test[category], Y_pred.T[i], labels = [0, 1]))
