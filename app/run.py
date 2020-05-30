@@ -30,6 +30,8 @@ def tokenize(text):
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('messages_cleaned', engine)
+#drop child alone column, since it has only one class
+df.drop("child_alone", inplace=True, axis = 1)
 
 # load model
 model = joblib.load("../models/classifier.pkl")
