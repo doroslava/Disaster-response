@@ -12,7 +12,8 @@ def load_data(messages_filepath, categories_filepath):
             categories_filepath (string): csv file with information about disaster categories
             
         Returns:
-            df (data frame): merged pandas dataframe with disaster messages and categories for the messages 
+            df (data frame): merged pandas dataframe with disaster messages and categories for the 
+            messages 
     
     '''
     
@@ -81,7 +82,7 @@ def save_data(df, database_filename):
     database_file_path = "sqlite:///" + database_filename
     engine = create_engine(database_file_path)
     
-    df.to_sql('messages_cleaned', engine, index=False)
+    df.to_sql('messages_cleaned', engine, index=False, if_exists = 'replace',)
 
 
 def main():

@@ -67,7 +67,7 @@ def build_model():
     
     # Define parameters for GridSearchCV.
     parameters = {
-        'vect__max_df' : (0.1, 0.4)
+        'vect__max_df' : (0.1, 0.4, 0.7, 1.0)
     }
     # Create gridsearch object and return as final model pipeline.
    
