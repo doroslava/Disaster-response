@@ -1,16 +1,9 @@
-
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.functions import tokenize
-
 from sqlalchemy import create_engine
 import pandas as pd
-import re
-
-
-
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -18,14 +11,15 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-
 import pickle
 
 def load_data(database_filepath):
     '''
     Reads cleaned data frame from sqlite database. 
+        
         Parameteres:
             database_filepath (string): sqlite database from which to read the cleaned data
+        
         Returns:
             X (data frame): pandas dataframe with predictor variable message
             Y (data frame): pandas dataframe with response variables, disaster response categories
@@ -55,6 +49,7 @@ def build_model():
         
         Parameters:
             None
+        
         Returns:
             scikit model
     '''
@@ -78,6 +73,7 @@ def build_model():
 def evaluate_model(model, X_test, Y_test, category_names):
     '''
     Evaluates model in therms of precision, recall and F1 statistics.
+        
         Parameters: 
             model : machine learning model to be evaluated
             X_test (data frame): Predictor variables for test set
@@ -95,9 +91,11 @@ def evaluate_model(model, X_test, Y_test, category_names):
 def save_model(model, model_filepath):
     '''
     Export model as a pickle file.
+        
         Parameters:
             model: model to export
             model_filepath (string): pickle file for saving            
+        
         Returns:
             None
     '''

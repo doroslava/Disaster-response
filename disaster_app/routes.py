@@ -18,13 +18,13 @@ from sqlalchemy import create_engine
 
 
 
-# load data
+# Load data.
 engine = create_engine('sqlite:///./data/DisasterResponse.db')
 df = pd.read_sql_table('messages_cleaned', engine)
-#drop child alone column, since it has only one class
+#Drop child alone column, since it has only one class.
 df.drop("child_alone", inplace=True, axis = 1)
 
-# load model
+# Load model.
 model = pickle.load(open("./models/classifier.pkl", "rb" ))
 
 
@@ -33,15 +33,13 @@ model = pickle.load(open("./models/classifier.pkl", "rb" ))
 @app.route('/index')
 def index():
     
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
+    # Extract data needed for visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
     category_counts = df.iloc[:,4:].sum()
     category_names = list(df.iloc[:,4:].columns)
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+    # Create visuals
     graphs = [
         {
             'data': [
@@ -87,21 +85,21 @@ def index():
         }
     ]
     
-    # encode plotly graphs in JSON
+    # Encode plotly graphs in JSON.
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
     
-    # render web page with plotly graphs
+    # Render web page with plotly graphs.
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
 
 
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
-    # save user input in query
+    # Save user input in query.
     query = request.args.get('query', '') 
 
-    # use model to predict classification for query
+    # Use model to predict classification for query.
     classification_labels = model.predict([query])[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
 

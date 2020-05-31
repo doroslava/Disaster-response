@@ -30,6 +30,7 @@ def clean_data(df):
         
         Parameters:
             df (data frame): input pandas data frame to be cleaned
+        
         Returns:
             df_final(data frame): cleaned pandas data frame
             
@@ -76,13 +77,14 @@ def save_data(df, database_filename):
         Parameters: 
             df (data frame): pandas data frame with cleaned data
             database_filename (string): string with relative path and name of the sqlite database in which to save cleaned data
+        
         Returns:
             None
     '''
     database_file_path = "sqlite:///" + database_filename
     engine = create_engine(database_file_path)
     
-    df.to_sql('messages_cleaned', engine, index=False, if_exists = 'replace',)
+    df.to_sql('messages_cleaned', engine, index=False, if_exists = 'replace')
 
 
 def main():
