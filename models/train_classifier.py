@@ -1,15 +1,15 @@
+
 import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.functions import tokenize
+
 from sqlalchemy import create_engine
 import pandas as pd
 import re
 
-import nltk
-nltk.download('punkt')
-nltk.download('wordnet')
-nltk.download('stopwords')
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
+
 
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
@@ -47,35 +47,6 @@ def load_data(database_filepath):
     
     return (X, Y, category_names)
     
-def tokenize(text):
-    '''
-    Tokenize text data.
-        Parameters:
-            text (string): Text to tokenize
-        Returns:
-            clean_text(list): List of words from tokenized text
-    
-    '''
-    # Remove non word/number characters.
-    text = re.sub(r"[^a-zA-Z0-9]", " ", text) 
-    
-    # Tokenize text
-    tokens = word_tokenize(text)
-    
-    # Initialize lemmatizer
-    lemmatizer = WordNetLemmatizer()
-    
-    # Lematize words, convert to lower case, and remove stop words 
-    clean_tokens = []
-    
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        if clean_tok not in stopwords.words("english"):
-            clean_tokens.append(clean_tok)
-    
-    return clean_tokens
-
-
 def build_model():
     '''
     Builds machine learning pipeline for natural language processing. First words corpus is 
@@ -96,7 +67,7 @@ def build_model():
     
     # Define parameters for GridSearchCV.
     parameters = {
-        'vect__max_df' : (0.1, 0.4, 0.7, 1.0)
+        'vect__max_df' : (0.1, 0.4)
     }
     # Create gridsearch object and return as final model pipeline.
    
@@ -132,7 +103,8 @@ def save_model(model, model_filepath):
     '''
     
     # Export model as a pickle file.
-    pickle.dump(model, open(model_filepath, 'wb'))
+    with open(model_filepath, 'wb') as file:
+        pickle.dump(model, file)
 
 
 def main():
